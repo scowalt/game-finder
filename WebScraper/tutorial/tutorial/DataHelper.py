@@ -1,17 +1,20 @@
 
 import pymysql
+import MySQLdb
 import dbcredentials
 
+import sys
 
 class DataHelper:
-
 
 	def connectToDB(self):
 		conn = pymysql.connect(
 			dbcredentials.HOST, 
 			dbcredentials.USERNAME, 
 			dbcredentials.PASSWORD, 
-			dbcredentials.DATABASE)
+			dbcredentials.DATABASE,
+			charset='utf8',
+			use_unicode=True)
 		return conn
 
 	# Runs the sql command passed in as a string
@@ -26,20 +29,24 @@ class DataHelper:
 		return cursor
 
 	def insertGame(self, title):
-		sql = "INSERT INTO Games (Title) VALUES ('{0}');".format(title)
+		sql = "INSERT INTO Games (Title) VALUES ('{0}');".format(pymysql.escape_string(title))
 		return self.runSQL(sql)
 		
 	def insertSource(self, sourceName):
-		sql = "INSERT INTO Sources (Name) VALUES ('{0}');".format(sourceName)
+		sql = "INSERT INTO Sources (Name) VALUES ('{0}');".format(pymysql.escape_string(sourceName))
 		return self.runSQL(sql)
 
 	def reviewIsAlreadyInDatabase(self, gameId, sourceId):
-		sql = "SELECT * FROM Reviews WHERE GameId={0} AND SourceId={1}".format(gameId, sourceId)
+		sql = "SELECT * FROM Reviews WHERE game_id={0} AND source_id={1}".format(gameId, sourceId)
 		result = self.runSQL(sql).fetchone()
 		if result is None:
 			return False
 		else:
 			return True
+
+
+	def insertReviewAsItem(self, item):
+		self.insertReview(item['gameTitle'], item['sourceName'], item['url'], item['content'])
 
 	# Given a game title, source name, url to the review, and content
 	# this function will insert that info into the databse
@@ -56,42 +63,35 @@ class DataHelper:
 		sourceId = self.findSourceIdFromTitle(sourceName)
 		if (sourceId) is None:
 			print("Couldn't find source id for %s, inserting source into database" % sourceName)
-			self.insertSource(sourceName)
-			sourceId = self.findSourceIdFromTitle(sourceName)
-			
+			self.insertSource(sourceName.encode('utf8'))
+			sourceId = self.findSourceIdFromTitle(sourceName.encode('utf8'))
+
+
 		#don't insert review if we already have a review for that game from that source
 		if self.reviewIsAlreadyInDatabase(gameId, sourceId) is True:
 			print("Found that the given gameId, sourceId pair already has a review in the databse")
 			return
 
-		values = (gameId, sourceId, url, content)
-		sql = "INSERT INTO Reviews (GameId, SourceId, Url, Content) VALUES ({0}, {1}, '{2}', '{3}');".format(gameId, sourceId, url, content)
+		values = (gameId, sourceId, pymysql.escape_string(url), pymysql.escape_string(content).encode('utf-8'))
+		sql = "INSERT INTO Reviews (game_id, source_id, Url, Content) VALUES ({0}, {1}, '{2}', \"{3}\");".format(gameId, sourceId, url, pymysql.escape_string(content))
 		return self.runSQL(sql)
 
 
 	def findGameIdFromTitle(self, gameTitle):
-		sql = "SELECT Id FROM Games WHERE Title='{0}'".format(gameTitle)
+		sql = "SELECT game_id FROM Games WHERE Title='{0}'".format(pymysql.escape_string(gameTitle))
 		result = self.runSQL(sql).fetchone()
 		if result is None:
 			print("Couldn't find game id for '%s'" % gameTitle)
 			return None
 		else:
-			return result["Id"]
+			return result["game_id"]
 
 	def findSourceIdFromTitle(self, sourceName):
-		sql = "SELECT Id FROM Sources WHERE Name='{0}'".format(sourceName)
+		sql = "SELECT source_id FROM Sources WHERE Name='{0}'".format(pymysql.escape_string(sourceName))
 		result = self.runSQL(sql).fetchone()
 		if result is None:
 			print("Couldn't find source id for '%s'" % sourceName)
 			return None
 		else:
-			return result["Id"]
+			return result["source_id"]
 
-
-
-
-helper = DataHelper()
-helper.insertReview("The Amazing Spider-Man 2",
- 	"ign", 
- 	"http://www.ign.com/articles/2014/05/01/the-amazing-spider-man-2-game-review",
- 	"this is a test")
