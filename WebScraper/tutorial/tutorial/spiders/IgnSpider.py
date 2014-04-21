@@ -2,10 +2,10 @@ from scrapy.spider import Spider
 from scrapy.selector import Selector
 from scrapy.http import Request
 
-from tutorial.items import IgnItem
+from tutorial.items import ReviewItem
 from tutorial.DataHelper import DataHelper
 
-import ignReviewTextExtractor
+from ReviewTextExtractor import Extractor
 
 
 class IgnSpider(Spider):
@@ -13,18 +13,16 @@ class IgnSpider(Spider):
     allowed_domains = ["ign.com"]
     start_urls = [
     	"http://www.ign.com/games/reviews"
-        # "http://www.ign.com/articles/2014/03/10/final-fantasy-x-x-2-hd-remaster-review", 
-        # "http://www.ign.com/articles/2014/05/01/republique-episode-2-metamorphosis-review"
     ]
 
     def parseReview(self, response):
     	sel = Selector(response)
-    	item = IgnItem()
+    	item = ReviewItem()
 
     	item['sourceName'] = 'ign'
     	item['gameTitle'] = sel.xpath('//a[@class="autolink"]/@title').extract()[0]
     	item['url'] = response.url #sel.xpath('//link[@rel="canonical"]/@href').extract()[0]
-    	item['content'] = ignReviewTextExtractor.Extractor().extractInfo(response.body)
+    	item['content'] = Extractor().extractInfoFromIgn(response.body)
     	item['content'] = ' '.join(item['content'].split())
 
     	helper = DataHelper()
@@ -48,6 +46,7 @@ class IgnSpider(Spider):
     	index = sel.xpath('//a[@id="is-more-reviews"]/@data-start').extract()[0]
     	newindex = int(index) + 25
     	maxIndex = 17500
+    	#TODO: change this so that it can get all reviews from ign
     	if (newindex > 1000):
     		return
 

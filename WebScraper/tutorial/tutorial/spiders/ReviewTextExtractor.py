@@ -2,13 +2,13 @@
 
 import sys, getopt
 import codecs
+from bs4 import BeautifulSoup
 
 class Extractor:
 	def extractInfoFromIgn(self, text) :
 		#pass string into BeautifulSoup
 		reload(sys)
 		sys.setdefaultencoding('UTF8')
-		from bs4 import BeautifulSoup
 		soup = BeautifulSoup(text)
 
 		import re
@@ -39,7 +39,19 @@ class Extractor:
 			isReviewText = isNotPartOfTrendingSidebar and isNotPartOfGameWikiSidebar and isNotCommentText and isNotCopyrightText
 			
 			if (isReviewText) :
-
 				reviewText.append(text)
+
+		return ' '.join(reviewText)
+
+	def extractInfoFromDestructoid(self, text):
+		reload(sys)
+		sys.setdefaultencoding('UTF8')
+		soup = BeautifulSoup(text)
+		reviewText = []
+
+		for link in soup.find_all('p') :
+			text = link.get_text().encode('utf-8', 'replace')
+			reviewText.append(text)
+
 
 		return ' '.join(reviewText)

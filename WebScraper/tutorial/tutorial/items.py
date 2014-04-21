@@ -12,7 +12,13 @@ class DmozItem(Item):
     link = Field()
     desc = Field()
 
-class IgnItem(Item):
+# class IgnItem(Item):
+# 	gameTitle = Field()
+# 	content = Field()
+# 	url = Field()
+# 	sourceName = Field()
+
+class ReviewItem(Item):
 	gameTitle = Field()
 	content = Field()
 	url = Field()
