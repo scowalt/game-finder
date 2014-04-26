@@ -1,0 +1,17 @@
+#queryReminder {
+  width: 100%;
+  text-align: center;
+  color: red;
+}
+
+#queryReminder p {
+  margin: 0px;
+  padding-top: 10px;
+}
+
+.result {
+  height: 150px;
+  width: 150px;
+  float:left;
+  text-align: center;
+}

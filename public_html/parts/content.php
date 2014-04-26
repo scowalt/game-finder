@@ -44,12 +44,8 @@ function generateSearchContent() {
   /*
   * 1. receive top 50 results, possibly already as a collection of objects
   *    or else as a listof unique identifiers to query the db with.
-  * 2. generate a div or span element for each of the results
-  * 3. determine screen size and then use that to determine each div/span's
-  *    size and the quantity per row of search results
-  * 4. attach javascript to alter the css of these results whenever the 
-  *    content div is resized into specific categories. 
-  *    i.e. 640 <a> 960 <b> 1280 <c> 1920
+  * 2. display query so user rememebers what they searched for
+  * 3. generate a div or span element for each of the results
   */
   //#1 
   $ret = "";
@@ -70,17 +66,12 @@ function generateSearchContent() {
   $results[13] = new Result("Bowling","1.4");
   $results[14] = new Result("Outdoor Hunting 27","0.5");
   
-  
   #2
-  $count = 0;
-  $ret .= "<div>";
+  $ret .= "<div id=\"queryReminder\">\n<p>Search Query: " . getQuery() . "</p>\n</div>\n";
+  
+  #3
+  $ret .= "<div id=\"contentColumn\">\n";
   foreach($results as $result) {
-    if(!($count%4)) {
-      $ret .= "</div>".
-              "<div>".
-              "".
-              "";
-    }
     $ret .= "<span id=\"".$result->name."_".$result->rank."\" class=\"result\">\n".
     	    "<p id=\"".$result->name."\">\n".
             $result->name.
@@ -91,19 +82,50 @@ function generateSearchContent() {
             "</p>\n".
             "<br/>".
             "</span>\n";
-    if(!($count%4)) {
-      $ret .= "</div>".
-              "".
-              "".
-              "";
-    }
-    $count++;
   }
   $ret .= "</div>";
+  
+  
   return $ret;
 }
 
+/*
+* 
+*/
+function getQuery() {
+  //get page url
+  $url = curPageURL();
+  
+  //drop first half of url before the GET parameters
+  //and save only the parameters
+  $parts = explode('=', $url);
+  array_shift($parts);
+  $temp = implode($parts);
+  $parts = explode("+", $temp);
+  
+  //re-join all the query words
+  $queryString = "";
+  foreach($parts as $part) {
+    $queryString .= $part . " ";
+  }
+  
+  return $queryString;
+}
 
+/********************************************************************
+* obtained from http://webcheatsheet.com/php/get_current_page_url.php
+********************************************************************/
+function curPageURL() {
+ $pageURL = 'http';
+ if ($_SERVER["HTTPS"] == "on") {$pageURL .= "s";}
+ $pageURL .= "://";
+ if ($_SERVER["SERVER_PORT"] != "80") {
+  $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+ } else {
+  $pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+ }
+ return $pageURL;
+}
 
 
 function underScore($text) {
