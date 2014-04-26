@@ -1,0 +1,34 @@
+section {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+}
+
+html {
+  width: 100%;
+  height: 100%;
+}
+
+#leftColumn, #rightColumn {
+  background-color: #898989;
+  width: 15%;
+  height: 100%;
+}
+
+#leftColumn {
+  float: left;
+}
+
+#rightColumn {
+  float: right;
+}
+
+#contentColumn {
+  width: 69%;
+  margin-left: 15%;
+  height: 100%
+}

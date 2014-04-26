@@ -1,0 +1,51 @@
+#logo {
+  max-height: 69px;
+  width: auto;
+  float: right;
+}
+
+#logoDiv {
+  float: right;
+  width: 40%;
+  min-width: 290px;
+  max-width: 290px;
+}
+
+#searchDiv {
+  float: left;
+  display: table;
+  width: 60%;
+  min-width: 420px;
+  height: 70px;
+}
+
+#searchFormDiv {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+#banner {
+  background-color:#A9A9A9;
+  border-bottom: 1px solid #909090;
+  height: 70px;
+  min-width: 710px;
+  overflow: hidden;
+}
+
+#search, #searchFormButtonSubmit {
+  border-bottom: 2px solid #909090;
+  color: #707070;
+}
+
+::-webkit-input-placeholder { /* WebKit browsers */
+    color: #707070;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #707070;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #707070;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color: #707070;
+}
