@@ -15,10 +15,12 @@ function head($type) {
     $ret .= "<title>GameFinder</title>";
     $ret .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/banner.css\">";
     $ret .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/content.css\">";
+    $ret .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/index.css\">";
   }elseif($type == "search") {
     $ret .= "<title>GameFinder Search</title>";
     $ret .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/banner.css\">";
     $ret .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/content.css\">";
+    $ret .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/search.css\">";
   }else {
     $ret .= "<title>GameFinder</title>";
     $ret .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/banner.css\">";
