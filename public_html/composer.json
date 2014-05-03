@@ -1,0 +1,7 @@
+{
+    "require": {
+	"gigablah/sphinxphp": "2.0.*",
+        "nlp-tools/nlp-tools": "dev-master",
+        "camspiers/porter-stemmer": "1.x"
+    }
+}
