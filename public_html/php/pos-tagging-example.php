@@ -48,10 +48,15 @@ while(strlen($string) !== 0){
 	$tagged = array_merge($tagged, $sentence_tagged);
 }
 
+
+// stemmed word frequency counting
+$word_freq = array();
 foreach($tagged as $pair){
 	$word = $pair[0];
 	$tag = $pair[1];
-	echo $word . " " . $tag . "<br/>";
+	$word_freq[Porter::Stem($word)] += 1;
 }
+
+var_dump($word_freq);
 
 ?>
