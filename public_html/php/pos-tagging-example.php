@@ -16,10 +16,9 @@ while(strlen($string) !== 0){
 	// this tags the first sentence in $string
 	$tagged = $pos->tag(explode(' ', $string)); 
 
-	echo count($tagged) . "<br/>";
-
 	// for every tagged word
-	for($i = 0; $i < count($tagged); $i++){
+	$count = count($tagged);
+	for($i = 0; $i < $count; $i++){
 		$pair = $tagged[$i];
 		$word = $pair[0];
 		$tag = $pair[1];
@@ -27,11 +26,15 @@ while(strlen($string) !== 0){
 		// remove the tagged word from the base string
 		$string = substr($string, stripos($string, $word) + strlen($word));
 
-		echo $word . " " . $tag;
+		if (in_array($tag, array("DT", "TO", "IN", "PRP"))){
+			// we don't care about this word
+			unset($tagged[$i]); // remove word from array
+		} else {
+			echo $word . " " . $tag;
+		}
 	}
 
 	echo "<br/>";
-
 }
 
 ?>
