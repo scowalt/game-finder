@@ -6,6 +6,8 @@ require_once("./StanfordNLP/StanfordTagger.php");
 require_once("./StanfordNLP/POSTagger.php");
 require_once("../../config.php");
 
+$remove_tags = array("DT", "TO", "IN", "PRP", "CC", 'PRP$', ',', ':', '-LRB-', '-RRB-', 'WP');
+
 // connect to the database
 $link = mysql_connect('engr-cpanel-mysql.engr.illinois.edu', $SQL_USER, $SQL_PASS);
 if (!$link) {
@@ -43,8 +45,7 @@ while(($row = mysql_fetch_row($unparsed_reviews)) != null) {
 			// remove the tagged word from the base string
 			$string = substr($string, stripos($string, $word) + strlen($word));
 
-			if (in_array($tag, array("DT", "TO", "IN", "PRP", "CC", '
-				PRP$'))){
+			if (in_array($tag, $remove_tags)){
 				// we don't care about this word
 				unset($sentence_tagged[$i]); // remove word from array
 			} else {
@@ -52,6 +53,8 @@ while(($row = mysql_fetch_row($unparsed_reviews)) != null) {
 				$parsed_length ++;
 			}
 		}
+
+		var_dump($sentence_tagged);
 
 		// add remaining sentence words to overall array
 		$tagged = array_merge($tagged, $sentence_tagged);
