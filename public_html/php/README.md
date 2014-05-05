@@ -1,0 +1,1 @@
+pos-tagging.php - This file will fill the Parsed_content, Parsed_length, Reviews_have_Words, and Words parts of the database. Whenever new reviews are added to the database, running this script will update all of the relevant information.
