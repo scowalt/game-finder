@@ -4,6 +4,7 @@ require_once("../vendor/autoload.php");
 require_once("./StanfordNLP/Base.php");
 require_once("./StanfordNLP/StanfordTagger.php");
 require_once("./StanfordNLP/POSTagger.php");
+require_once("../../config.php");
 
 // connect to the database
 $link = mysql_connect('engr-cpanel-mysql.engr.illinois.edu', $SQL_USER, $SQL_PASS);
