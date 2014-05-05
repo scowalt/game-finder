@@ -78,7 +78,7 @@ while(($row = mysql_fetch_row($result)) != null) {
 		$result = mysql_query($query)  or die($query. "<br/><br/>".mysql_error());;
 
 		// add frequency
-		$query = "INSERT INTO Reviews_have_Words (Id, word, count) VALUES ($id, \"$word\", $count)";
+		$query = "INSERT IGNORE INTO Reviews_have_Words (Id, word, count) VALUES ($id, \"$word\", $count)";
 		$result = mysql_query($query)  or die($query. "<br/><br/>".mysql_error());;
 	}
 
