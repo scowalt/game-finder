@@ -6,7 +6,7 @@ require_once("./StanfordNLP/StanfordTagger.php");
 require_once("./StanfordNLP/POSTagger.php");
 require_once("../../config.php");
 
-$remove_tags = array("DT", "TO", "IN", "PRP", "CC", 'PRP$', ',', ':', '-LRB-', '-RRB-', 'WP');
+$remove_tags = array("DT", "TO", "IN", "PRP", "CC", 'PRP$', '.', ',', ':', '-LRB-', '-RRB-', 'WP');
 
 // connect to the database
 $link = mysql_connect('engr-cpanel-mysql.engr.illinois.edu', $SQL_USER, $SQL_PASS);
