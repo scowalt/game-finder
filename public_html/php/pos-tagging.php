@@ -59,7 +59,7 @@ while(($row = mysql_fetch_row($unparsed_reviews)) != null) {
 
 	// put the Parsed_content and Parsed_length into the database
 	$parsed_content = mysql_real_escape_string($parsed_content);
-	$query = "UPDATE Reviews SET Parsed_length = $parsed_length AND Parsed_content = $parsed_content where Id = $id";
+	$query = "UPDATE Reviews SET Parsed_length = $parsed_length AND Parsed_content = \"$parsed_content\" where Id = $id";
 	$result = mysql_query($query)  or die($query. "<br/><br/>".mysql_error());;
 
 	// stemmed word frequency counting
