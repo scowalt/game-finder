@@ -44,7 +44,7 @@ foreach($query_words as $word){
 $reviews = array();
 foreach($query_words as $word){
 	$escaped_word = mysql_real_escape_string($word);
-	$query = "SELECT Id,word,count,Parsed_length FROM Reviews_have_Words NATURAL JOIN Reviews WHERE word = \"$escaped_word\"";
+	$query = "SELECT Id,word,count,Parsed_length FROM Reviews_have_Words NATURAL JOIN Reviews WHERE word = \"$escaped_word\" AND Parsed_length IS NOT NULL";
 	$result = mysql_query($query)  or die($query. "<br/><br/>".mysql_error());;
 	while(($row = mysql_fetch_row($result)) != null) {
 		$id = $row[0];
@@ -57,7 +57,7 @@ foreach($query_words as $word){
 var_dump($reviews);
 
 // get the number of documents and avg doc length
-$query = "SELECT COUNT(*) AS count, AVG(Parsed_length) AS avg FROM Reviews GROUP BY Id";
+$query = "SELECT COUNT(*) AS count, AVG(Parsed_length) AS avg FROM Reviews WHERE Parsed_length IS NOT NULL GROUP BY Id";
 $result = mysql_query($query)  or die($query. "<br/><br/>".mysql_error());;
 $docN = null;
 $docLengthAvg = null;
