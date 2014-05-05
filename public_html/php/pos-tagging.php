@@ -48,7 +48,7 @@ while(($row = mysql_fetch_row($unparsed_reviews)) != null) {
 				// we don't care about this word
 				unset($sentence_tagged[$i]); // remove word from array
 			} else {
-				$parsed_content += Porter::Stem($word) + " ";
+				$parsed_content = $parsed_content . Porter::Stem($word) . " ";
 				$parsed_length ++;
 			}
 		}
@@ -58,9 +58,7 @@ while(($row = mysql_fetch_row($unparsed_reviews)) != null) {
 	}
 
 	// put the Parsed_content and Parsed_length into the database
-	echo $parsed_content;
 	$parsed_content = mysql_real_escape_string($parsed_content);
-	echo $parsed_content;
 	$query = "UPDATE Reviews SET Parsed_length = $parsed_length, Parsed_content = \"$parsed_content\" WHERE Id = $id";
 	$result = mysql_query($query)  or die($query. "<br/><br/>".mysql_error());;
 
