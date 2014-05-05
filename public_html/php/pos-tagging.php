@@ -16,7 +16,7 @@ if (!$link) {
 mysql_select_db('gamefinder_db', $link);
 
 // select all of the reviews that haven't been parsed yet
-$query = "SELECT Id,Content from Reviews WHERE Parsed_content IS NULL AND Parsed_length IS NULL LIMIT 10";
+$query = "SELECT Id,Content from Reviews WHERE Parsed_content IS NULL AND Parsed_length IS NULL";
 $unparsed_reviews = mysql_query($query)  or die($query. "<br/><br/>".mysql_error());;
 while(($row = mysql_fetch_row($unparsed_reviews)) != null) {	
 	$id = $row[0];
