@@ -8,6 +8,8 @@ require_once("../../config.php");
 
 $remove_tags = array("DT", "TO", "IN", "PRP", "CC", 'PRP$', '.', ',', ':', '-LRB-', '-RRB-', 'WP');
 
+set_time_limit(5*60); // max execution time of a line is 5 minutes
+
 // connect to the database
 $link = mysql_connect('engr-cpanel-mysql.engr.illinois.edu', $SQL_USER, $SQL_PASS);
 if (!$link) {
