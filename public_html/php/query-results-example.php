@@ -81,14 +81,9 @@ foreach($reviews as $review_id => $review){
 	foreach($review["term-freq"] as $word => $tf){
 		$df = $dfs[$word];
 		$qf = $qfs[$word];
-		echo ("docN = $docN <br/>");
-		echo ("df = $df <br/>");
 		$idf = log(($docN-$df+0.5)/($df+0.5));
-		echo ("idf = $idf <br/>");
 		$weight = (($k1+1.0)*$tf) / ($k1*(1.0-$kB+$kB*$docLength/$docLengthAvg)+$tf);
-		echo ("weight = $weight <br/>");
 		$tWeight = (($k3+1)*$qf) / ($k3+$qf);
-		echo ("tWeight = $tWeight <br/>");
 		$reviews[$review_id]["score"] += $idf * $weight * $tWeight;
 	}
 }
