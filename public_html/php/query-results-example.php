@@ -44,7 +44,7 @@ foreach($query_words as $word){
 $reviews = array();
 foreach($query_words as $word){
 	$escaped_word = mysql_real_escape_string($word);
-	$query = "SELECT Id,word,count,Parsed_length FROM Reviews_have_Words NATURAL JOIN Reviews WHERE word = \"$escaped_word\" AND Parsed_length IS NOT NULL";
+	$query = "SELECT Id,word,count,Parsed_length,game_id FROM Reviews_have_Words NATURAL JOIN Reviews WHERE word = \"$escaped_word\" AND Parsed_length IS NOT NULL";
 	$result = mysql_query($query)  or die($query. "<br/><br/>".mysql_error());;
 	while(($row = mysql_fetch_row($result)) != null) {
 		$id = $row[0];
@@ -52,9 +52,9 @@ foreach($query_words as $word){
 		$reviews[$id]["id"] = $id; // this is redundant, but this information is needed later for sorting
 		$reviews[$id]["term-freq"][$word] = $count;
 		$reviews[$id]["length"] = $row[3];
+		$reviews[$id]["game"] = $row[4];
 	}
 }
-var_dump($reviews);
 
 // get the number of documents
 $query = "SELECT COUNT(*) AS count FROM Reviews WHERE Parsed_length IS NOT NULL";
@@ -88,12 +88,27 @@ foreach($reviews as $review_id => $review){
 	}
 }
 
-// sort the reviews by score
-usort($reviews, "compare");
-function compare($r1, $r2){
-	return $r2["score"] - $r1["score"];
+// calculate the cumulative score for each game
+$game_score = array();
+foreach($reviews as $review_id => $review){
+	$game_id = $review["game"];
+	$score = $review["score"];
+	$game_score[$game_id] += $score;
 }
 
-var_dump($reviews);
+// calculate average score for each game
+foreach($game_score as $game_id => $score){
+	// find the total number of reviews for each game
+	$query = "SELECT COUNT(*) as count FROM Reviews WHERE game_id = $game_id";
+	$result = mysql_query($query)  or die($query. "<br/><br/>".mysql_error());;
+	while(($row = mysql_fetch_row($result)) != null) {
+		$game_score[$game_id] = $game_score[$game_id] / $row[0];
+	}
+}
+
+// sort the games by score
+arsort($game_score); // sort descending by value
+
+var_dump($game_score);
 
 ?>
