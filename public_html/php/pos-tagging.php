@@ -60,11 +60,6 @@ while(($row = mysql_fetch_row($unparsed_reviews)) != null) {
 		$tagged = array_merge($tagged, $sentence_tagged);
 	}
 
-	// put the Parsed_content and Parsed_length into the database
-	$parsed_content = mysql_real_escape_string($parsed_content);
-	$query = "UPDATE Reviews SET Parsed_length = $parsed_length, Parsed_content = \"$parsed_content\" WHERE Id = $id";
-	$result = mysql_query($query)  or die($query. "<br/><br/>".mysql_error());;
-
 	// stemmed word frequency counting
 	$word_freq = array();
 	foreach($tagged as $pair){
@@ -84,6 +79,11 @@ while(($row = mysql_fetch_row($unparsed_reviews)) != null) {
 		$query = "INSERT IGNORE INTO Reviews_have_Words (Id, word, count) VALUES ($id, \"$word\", $count)";
 		$result = mysql_query($query)  or die($query. "<br/><br/>".mysql_error());;
 	}
+
+	// put the Parsed_content and Parsed_length into the database
+	$parsed_content = mysql_real_escape_string($parsed_content);
+	$query = "UPDATE Reviews SET Parsed_length = $parsed_length, Parsed_content = \"$parsed_content\" WHERE Id = $id";
+	$result = mysql_query($query)  or die($query. "<br/><br/>".mysql_error());;
 
 	echo "Done with $id <br/>";
 }
