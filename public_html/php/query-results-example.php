@@ -56,14 +56,20 @@ foreach($query_words as $word){
 }
 var_dump($reviews);
 
-// get the number of documents and avg doc length
-$query = "SELECT COUNT(*) AS count, AVG(Parsed_length) AS avg FROM Reviews WHERE Parsed_length IS NOT NULL GROUP BY Id";
+// get the number of documents
+$query = "SELECT COUNT(*) AS count FROM Reviews WHERE Parsed_length IS NOT NULL";
 $result = mysql_query($query)  or die($query. "<br/><br/>".mysql_error());;
 $docN = null;
-$docLengthAvg = null;
 while(($row = mysql_fetch_row($result)) != null) {
 	$docN = $row[0];
-	$docLengthAvg = $row[1];
+}
+
+// get doc avg len
+$query = "SELECT AVG(Parsed_length) AS avg FROM Reviews WHERE Parsed_length IS NOT NULL GROUP BY Id";
+$result = mysql_query($query)  or die($query. "<br/><br/>".mysql_error());;
+$docLengthAvg = null;
+while(($row = mysql_fetch_row($result)) != null) {
+	$docLengthAvg = $row[0];
 }
 
 // calculate the BM25 score for each review
@@ -75,9 +81,14 @@ foreach($reviews as $review_id => $review){
 	foreach($review["term-freq"] as $word => $tf){
 		$df = $dfs[$word];
 		$qf = $qfs[$word];
+		echo ("docN = $docN <br/>");
+		echo ("df = $df <br/>");
 		$idf = log(($docN-$df+0.5)/($df+0.5));
+		echo ("idf = $idf <br/>");
 		$weight = (($k1+1.0)*$tf) / ($k1*(1.0-$kB+$kB*$docLength/$docLengthAvg)+$tf);
+		echo ("weight = $weight <br/>");
 		$tWeight = (($k3+1)*$qf) / ($k3+$qf);
+		echo ("tWeight = $tWeight <br/>");
 		$reviews[$review_id]["score"] += $idf * $weight * $tWeight;
 	}
 }
