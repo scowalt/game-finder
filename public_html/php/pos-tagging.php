@@ -21,6 +21,7 @@ $unparsed_reviews = mysql_query($query)  or die($query. "<br/><br/>".mysql_error
 while(($row = mysql_fetch_row($unparsed_reviews)) != null) {	
 	$id = $row[0];
 	$string = $row[1];
+	$time = time(); // start time of execution
 
 	// load tagging library
 	$pos = new \StanfordNLP\POSTagger(
@@ -34,6 +35,12 @@ while(($row = mysql_fetch_row($unparsed_reviews)) != null) {
 	while(strlen($string) !== 0){
 		// this tags the first sentence in $string
 		$sentence_tagged = $pos->tag(explode(' ', $string)); 
+
+		// if this review has taken more than two mintes to parse
+		if (time() > ($time + 2*60)){
+			echo "Review taking too long <br/>";
+			break; // stop parsing sentences
+		}
 
 		// for every tagged word in the sentence
 		$count = count($sentence_tagged);
@@ -53,11 +60,15 @@ while(($row = mysql_fetch_row($unparsed_reviews)) != null) {
 				$parsed_length ++;
 			}
 		}
-
-		var_dump($sentence_tagged);
-
+		
 		// add remaining sentence words to overall array
 		$tagged = array_merge($tagged, $sentence_tagged);
+	}
+
+	// if this review has taken more than two mintes to parse
+	if (time() > ($time + 2*60)){
+		echo "Review taking too long <br/>";
+		continue; //skip current review
 	}
 
 	// stemmed word frequency counting
